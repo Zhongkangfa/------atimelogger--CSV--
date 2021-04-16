@@ -9,6 +9,7 @@ class MyApp(Tk):
         super().__init__()
 
         self.setupUI()
+        self.csv_path = ''
 
     def setupUI(self):
         self.title("选择atimelogger report")
@@ -46,26 +47,20 @@ class MyApp(Tk):
         pass
 
     def select_csv_file(self):
-        filename = filedialog.askopenfilename(
+        self.csv_path = filedialog.askopenfilename(
             title='选择Excel文件',
             filetypes=[
                 ('csv', '*.csv')]
         )
-        self.url_line_edit.insert(INSERT, filename)
+        self.url_line_edit.insert(INSERT, self.csv_path)
         pass
 
     def collating(self):
         # 创建对象
         assistant = AtimeloggerAssistant()
         # 添加report
-        assistant.add_report()
-        # 加工精简
-        assistant.simplified()
+        assistant.add_report(self.csv_path)
         # 按天汇总
-        assistant.summarizing('day')
-        # 按周汇总
-        assistant.summarizing('week')
-        # 按月汇总
-        assistant.summarizing('month')
+        assistant.summarizing()
 
         pass
