@@ -8,23 +8,27 @@ class Activity:
         self.days = {}
         self.weeks = {}
         self.months = {}
+        self.zero_delta = datetime.timedelta()
         self._scan()
-        # self.test()
-        # print(self.intervals)
         pass
 
-    def test(self):
-        print(self.months)
+    def total(self, time_unit):
+        pass
 
     def total_by_day(self, day):
-        return round(self.days.get(day, datetime.timedelta()).total_seconds()/3600, 2)
+        seconds = self.days.get(day, self.zero_delta).total_seconds()
+        hours = round(seconds/3600, 2)
+        return hours
 
     def total_by_week(self, week):
-        
-        return round(self.weeks.get(week, datetime.timedelta()).total_seconds()/3600, 2)
+        seconds = self.weeks.get(week, self.zero_delta).total_seconds()
+        hours = round(seconds/3600, 2)
+        return hours
 
     def total_by_month(self, month):
-        return round(self.months.get(month, datetime.timedelta()).total_seconds()/3600, 2)
+        seconds = self.months.get(month, self.zero_delta).total_seconds()
+        hours = round(seconds/3600, 2)
+        return hours
 
     def _scan(self):
         for interval in self.intervals:
@@ -34,39 +38,47 @@ class Activity:
                 interval[2], "%Y/%m/%d %H:%M:%S")
             over_time = datetime.datetime.strptime(
                 interval[3], "%Y/%m/%d %H:%M:%S")
+            
+            #进行断言
+            assert over_time >= start_time, " 逻辑错误：结束时间小于开始时间, 该条时间记录是："+str(interval)
+            assert (over_time - start_time).seconds <= 86400, " 提示：该条时间记录时长超过24小时，为了减少不必要的错误和误差，程序终止："+str(interval)
 
             start_date = start_time.date()
             over_date = over_time.date()
-            
+
+            start_week = start_date.strftime("%Y-%W")
+            over_week = over_date.strftime("%Y-%W")
+
+            start_month = start_date.strftime("%Y-%m")
+            over_month = over_date.strftime("%Y-%m")
+
             if start_date == over_date:
                 duration = over_time - start_time
                 self.days[start_date] = self.days.get(
-                    start_date, datetime.timedelta()) + duration
-                self.weeks[start_date.strftime("%Y-%W")] = self.weeks.get(
-                    start_date.strftime("%Y-%W"), datetime.timedelta()) + duration
-                self.months[start_date.strftime("%Y-%m")] = self.months.get(
-                    start_date.strftime("%Y-%m"), datetime.timedelta()) + duration
+                    start_date, self.zero_delta) + duration
+                self.weeks[start_week] = self.weeks.get(
+                    start_week, self.zero_delta) + duration
+                self.months[start_month] = self.months.get(
+                    start_month, self.zero_delta) + duration
             else:
                 datetime_zero_point = datetime.datetime(
                     over_time.year, over_time.month, over_time.day)
 
                 # 0点之前
                 duration = datetime_zero_point - start_time
-                self.days[start_date] = self.days.get(start_date, datetime.timedelta()) + duration
-                self.weeks[start_date.strftime("%Y-%W")] = self.weeks.get(
-                    start_date.strftime("%Y-%W"), datetime.timedelta()) + duration
-                self.months[start_date.strftime("%Y-%m")] = self.months.get(
-                    start_date.strftime("%Y-%m"), datetime.timedelta()) + duration
+                self.days[start_date] = self.days.get(
+                    start_date, self.zero_delta) + duration
+                self.weeks[start_week] = self.weeks.get(
+                    start_week, self.zero_delta) + duration
+                self.months[start_month] = self.months.get(
+                    start_month, self.zero_delta) + duration
 
                 # 0点之后
                 duration = over_time - datetime_zero_point
                 self.days[over_date] = self.days.get(
-                    over_date, datetime.timedelta()) + duration
-                self.weeks[over_date.strftime("%Y-%W")] = self.weeks.get(
-                    over_date.strftime("%Y-%W"), datetime.timedelta()) + duration
-                self.months[over_date.strftime("%Y-%m")] = self.months.get(
-                    over_date.strftime("%Y-%m"), datetime.timedelta()) + duration
-        print(self.name)
-        print(self.months)
-        print("++++++")
+                    over_date, self.zero_delta) + duration
+                self.weeks[over_week] = self.weeks.get(
+                    over_week, self.zero_delta) + duration
+                self.months[over_month] = self.months.get(
+                    over_month, self.zero_delta) + duration
         pass

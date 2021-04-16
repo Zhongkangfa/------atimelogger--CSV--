@@ -5,6 +5,6 @@
 """
 
 if __name__ == '__main__':
-    from ThinterWin import *
+    from ThinterWin import MyApp
     MyApp().mainloop()
 

@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Tk, Label, Entry, Button, INSERT, messagebox
 from tkinter import filedialog
 from AtimeloggerAssistant import AtimeloggerAssistant
 
@@ -55,12 +55,24 @@ class MyApp(Tk):
         self.url_line_edit.insert(INSERT, self.csv_path)
         pass
 
+    def save_file(self):
+        file_name = filedialog.asksaveasfilename(
+            title='Python tkinter', filetypes=[("EXCEL 文件", ".xlsx")])
+        return file_name
+
     def collating(self):
         # 创建对象
         assistant = AtimeloggerAssistant()
         # 添加report
         assistant.add_report(self.csv_path)
-        # 按天汇总
+        # 整理
+        assistant.work()
+        # 汇总
         assistant.summarizing()
+        messagebox.showinfo('提示','数据处理成功！准备保存并关闭软件。')
+        # 保存并退出
+        file_name = self.save_file()
+        assistant.save(file_name)
+        self.destroy()
 
         pass

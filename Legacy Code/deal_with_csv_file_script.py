@@ -5,9 +5,9 @@ import openpyxl
 # 格式2019/12/31 23:11
 
 report_name = 'report.csv'
-src_url = '原始报告/' + report_name
+src_url = 'raw_report/' + report_name
 #year0 = datetime.datetime.now().strftime("%Y")
-save_url = '处理后的报告/' +'处理后的报告.xlsx'
+save_url = 'processed_report/' +'new_report.xlsx'
 """
 初始化
 """
