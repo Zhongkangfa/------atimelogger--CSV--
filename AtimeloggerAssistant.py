@@ -18,7 +18,6 @@ class AtimeloggerAssistant:
         self.group_types = set()
         self.no_group_types = set()
         self.activitys = []
-        self.all_life = []
         pass
 
     def create_sheet(self):
@@ -39,18 +38,40 @@ class AtimeloggerAssistant:
         table_header = list(self.no_group_types)
         table_header.insert(0, "")
         self.ws_days.append(table_header)
-        self.all_life = set([datetime.datetime.strptime(
-                interval[2], "%Y/%m/%d %H:%M:%S").date() for interval in self.raw_intervals])
+        self.ws_weeks.append(table_header)
+        self.ws_months.append(table_header)
+        days = sorted(list(set([datetime.datetime.strptime(
+                interval[2], "%Y/%m/%d %H:%M:%S").date() for interval in self.raw_intervals])))
 
         # 制作第一张表单
-        for life_date in sorted(list(self.all_life)):
-            row_for_ws_days = [str(life_date)]
-            # row_for_ws_weeks = [str(life_date.year)+"-"+str(life_date.weekday())]
-            # row_for_ws_months = [str(life_date.year)+"-"+str(life_date.month)]
+        for day in days:
+            row = [str(day)]
             for activity in self.activitys:
-                counted_activity_time = round(activity.days.get(life_date, datetime.timedelta()).seconds/3600, 2)
-                row_for_ws_days.append(counted_activity_time)
-            self.ws_days.append(row_for_ws_days)
+                counted_activity_time = activity.total_by_day(day)
+                row.append(counted_activity_time)
+            self.ws_days.append(row)
+        
+        # 第二张
+        weeks =  sorted(list(set([day.strftime("%Y-%W") for day in days])))
+        for week in weeks:
+            row = [week]
+            # row = [str(life_date.year)+"-"+str(life_date.month)]
+            for activity in self.activitys:
+                counted_activity_time = activity.total_by_week(week)
+                row.append(counted_activity_time)
+            self.ws_weeks.append(row)
+        
+        # 第三张
+        months = sorted(list(set([day.strftime("%Y-%m") for day in days])))
+        for month in months:
+            row = [month]
+            for activity in self.activitys:
+                counted_activity_time = activity.total_by_month(month)
+                row.append(counted_activity_time)
+            self.ws_months.append(row)
+
+
+
 
         # 保存
         self.wb.save("after.xlsx")

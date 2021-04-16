@@ -17,13 +17,14 @@ class Activity:
         print(self.months)
 
     def total_by_day(self, day):
-        return self.days[day]
+        return round(self.days.get(day, datetime.timedelta()).total_seconds()/3600, 2)
 
     def total_by_week(self, week):
-        return self.weeks[week]
+        
+        return round(self.weeks.get(week, datetime.timedelta()).total_seconds()/3600, 2)
 
     def total_by_month(self, month):
-        return self.months[month]
+        return round(self.months.get(month, datetime.timedelta()).total_seconds()/3600, 2)
 
     def _scan(self):
         for interval in self.intervals:
@@ -41,10 +42,10 @@ class Activity:
                 duration = over_time - start_time
                 self.days[start_date] = self.days.get(
                     start_date, datetime.timedelta()) + duration
-                self.weeks[str(start_date.year)+"-"+str(start_date.weekday())] = self.weeks.get(
-                    str(start_date.year)+"-"+str(start_date.weekday()), datetime.timedelta()) + duration
-                self.months[str(start_date.year)+"-"+str(start_date.month)] = self.months.get(
-                    str(start_date.year)+"-"+str(start_date.month), datetime.timedelta()) + duration
+                self.weeks[start_date.strftime("%Y-%W")] = self.weeks.get(
+                    start_date.strftime("%Y-%W"), datetime.timedelta()) + duration
+                self.months[start_date.strftime("%Y-%m")] = self.months.get(
+                    start_date.strftime("%Y-%m"), datetime.timedelta()) + duration
             else:
                 datetime_zero_point = datetime.datetime(
                     over_time.year, over_time.month, over_time.day)
@@ -52,18 +53,20 @@ class Activity:
                 # 0点之前
                 duration = datetime_zero_point - start_time
                 self.days[start_date] = self.days.get(start_date, datetime.timedelta()) + duration
-                self.weeks[str(start_date.year)+"-"+str(start_date.weekday())] = self.weeks.get(
-                    str(start_date.year)+"-"+str(start_date.weekday()), datetime.timedelta()) + duration
-                self.months[str(start_date.year)+"-"+str(start_date.month)] = self.months.get(
-                    str(start_date.year)+"-"+str(start_date.month), datetime.timedelta()) + duration
+                self.weeks[start_date.strftime("%Y-%W")] = self.weeks.get(
+                    start_date.strftime("%Y-%W"), datetime.timedelta()) + duration
+                self.months[start_date.strftime("%Y-%m")] = self.months.get(
+                    start_date.strftime("%Y-%m"), datetime.timedelta()) + duration
 
                 # 0点之后
                 duration = over_time - datetime_zero_point
                 self.days[over_date] = self.days.get(
                     over_date, datetime.timedelta()) + duration
-                self.weeks[str(over_date.year)+"-"+str(over_date.weekday())] = self.weeks.get(
-                    str(over_date.year)+"-"+str(over_date.weekday()), datetime.timedelta()) + duration
-                self.months[str(over_date.year)+"-"+str(over_date.month)] = self.months.get(
-                    str(over_date.year)+"-"+str(over_date.month), datetime.timedelta()) + duration
-
+                self.weeks[over_date.strftime("%Y-%W")] = self.weeks.get(
+                    over_date.strftime("%Y-%W"), datetime.timedelta()) + duration
+                self.months[over_date.strftime("%Y-%m")] = self.months.get(
+                    over_date.strftime("%Y-%m"), datetime.timedelta()) + duration
+        print(self.name)
+        print(self.months)
+        print("++++++")
         pass
