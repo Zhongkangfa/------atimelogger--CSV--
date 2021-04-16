@@ -37,7 +37,7 @@ pip3 install openpyxl
 在atimelogger APP中设置CSV文件的自定义日期格式：
 
 ```
-yyyy/MM/dd HH:mm
+yyyy/MM/dd HH:mm:ss
 ```
 
 然后，创建并导出CSV格式报告
