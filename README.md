@@ -2,7 +2,7 @@
 
 #### 有了简陋的GUI
 
-[图片]
+![image](https://github.com/Zhongkangfa/------atimelogger--CSV--/tree/master/img/GUI.jpg)
 
 能够让用户选择指定文件，处理后还能指定导出的位置。
 
