@@ -23,3 +23,47 @@
 - 结束时间不能小于开始时间；
 - 一次活动间隔不能超过24小时；
 - 活动类别不支持重名；
+
+
+
+### 代码说明（note）
+
+#### 如何添加选择文件的对话框的交互窗口？
+
+```python
+from tkinter import filedialog
+
+self.csv_path = filedialog.askopenfilename(
+            title='请选择csv文件',
+            filetypes=[
+                ('csv文件', '*.csv')]
+        )
+```
+
+#### 如何修改Worksheet的名称(title)？
+
+```python
+ws.title = "365 Days"
+```
+
+#### 如何给列表（list）去重？
+
+```python
+my_list = [1,1,1]
+my_list = list(set(my_list))
+```
+#### 如何将时间字符串转换为datetime数据类型？
+
+```python
+import datetime
+datetime_str = '2019/5/5 21:59:33'
+datetime.datetime.strptime(datetime_str, "%Y/%m/%d %H:%M:%S")
+```
+
+#### 要访问的字典不存在指定的key时，如何添加默认值并在此基础上运算？
+
+```python
+container = dict()
+container["max"] = container.get("max", 100) + 50
+```
+

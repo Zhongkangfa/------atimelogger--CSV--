@@ -48,9 +48,9 @@ class MyApp(Tk):
 
     def select_csv_file(self):
         self.csv_path = filedialog.askopenfilename(
-            title='选择Excel文件',
+            title='选择csv文件',
             filetypes=[
-                ('csv', '*.csv')]
+                ('csv文件', '*.csv')]
         )
         print(self.csv_path)
         self.url_label['text'] = "..." + self.csv_path[-30:]
