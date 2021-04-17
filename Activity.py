@@ -31,6 +31,10 @@ class Activity:
         return hours
 
     def _scan(self):
+        """
+        逐条处理时间记录（interval），一次性汇总到各个容器（dict）
+        满足当前该程序最基本的业务需求。
+        """
         for interval in self.intervals:
             # 第一步：判断开始时间和结束时间是不是同一天
             # ['形象', '00:32:35', '2019/5/5 21:59:33', '2019/5/5 22:32:08', '']

@@ -1,14 +1,11 @@
 import csv
 import openpyxl
 import datetime
-import copy
 from Activity import *
 
 
 class AtimeloggerAssistant:
     def __init__(self):
-        self.file = None
-        self.days_dict = {}
         self.raw_intervals = []
         self.raw_types = []
         self.types = set()
@@ -78,6 +75,11 @@ class AtimeloggerAssistant:
         self.wb.save(file_name)
 
     def _separate(self):
+        """
+        导出来的CSV文件中，通过与时间记录空一行的形式汇总了活动类别，保存着活动类别的层级关系。
+        第一步就是要将这两个部分区分出来。
+
+        """
         with open(self.file_path, 'r', encoding='utf-8') as f:
             read = csv.reader(f)
             read.__next__()
@@ -97,7 +99,11 @@ class AtimeloggerAssistant:
         pass
 
     def _get_activity_type_info(self):
-        """我的程序暂不支持重名活动类别"""
+        """
+        我的程序暂不支持重名活动类别
+        主要是区分出活动组（Group）和活动
+        先统计出具体活动的情况，才方便再进一步去汇总分组情况。
+        """
         # all_types = group + activity
         self.all_types = set([raw_type[-3] for raw_type in self.raw_types])
         # group_types = group
@@ -114,4 +120,5 @@ class AtimeloggerAssistant:
                 interval for interval in self.raw_intervals if interval[0] == activity_name]
             # ['形象', '00:32:35', '2019/5/5 21:59:33', '2019/5/5 22:32:08', '']
             self.activitys.append(Activity(activity_name, own_intervals))
+        self.activitys = sorted(self.activitys)
         pass

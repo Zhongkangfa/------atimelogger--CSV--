@@ -1,4 +1,4 @@
-from tkinter import Tk, Label, Entry, Button, INSERT, messagebox
+from tkinter import Tk, Label, Entry, Button, INSERT, messagebox,DISABLED
 from tkinter import filedialog
 from AtimeloggerAssistant import AtimeloggerAssistant
 
@@ -30,7 +30,7 @@ class MyApp(Tk):
 
     def create_widget(self):
         self.select_label = Label(self, text='请选择文件:')
-        self.url_line_edit = Entry(self, bg='white', width=45)
+        self.url_label = Label(self, bg='white', width=45)
         self.browse_button = Button(
             self, text='浏览', width=8, command=self.select_csv_file)
         self.collating_button = Button(
@@ -40,7 +40,7 @@ class MyApp(Tk):
 
     def layout(self):
         self.select_label.grid(row=0, column=0)
-        self.url_line_edit.grid(row=0, column=1)
+        self.url_label.grid(row=0, column=1)
         self.browse_button.grid(row=0, column=2)
         self.collating_button.grid(row=1, column=2)
         self.exit_button.grid(row=2, column=2)
@@ -52,7 +52,8 @@ class MyApp(Tk):
             filetypes=[
                 ('csv', '*.csv')]
         )
-        self.url_line_edit.insert(INSERT, self.csv_path)
+        print(self.csv_path)
+        self.url_label['text'] = "..." + self.csv_path[-30:]
         pass
 
     def save_file(self):
@@ -72,7 +73,10 @@ class MyApp(Tk):
         messagebox.showinfo('提示','数据处理成功！准备保存并关闭软件。')
         # 保存并退出
         file_name = self.save_file()
-        assistant.save(file_name)
-        self.destroy()
-
+        if not file_name: 
+            print("已取消！")
+            return
+        else:
+            assistant.save(file_name)
+            self.destroy()
         pass
