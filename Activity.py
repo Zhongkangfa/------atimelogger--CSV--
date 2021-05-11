@@ -9,7 +9,7 @@ class Activity:
         self.weeks = {}
         self.months = {}
         self.zero_delta = datetime.timedelta()
-        self._scan()
+        self.__scan()
         pass
 
     def total(self, time_unit):
@@ -30,7 +30,7 @@ class Activity:
         hours = round(seconds/3600, 2)
         return hours
 
-    def _scan(self):
+    def __scan(self):
         """
         逐条处理时间记录（interval），一次性汇总到各个容器（dict）
         满足当前该程序最基本的业务需求。

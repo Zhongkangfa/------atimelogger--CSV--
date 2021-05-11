@@ -14,7 +14,7 @@ class AtimeloggerAssistant:
         self.activitys = []
         pass
 
-    def _create_sheet(self):
+    def __create_sheet(self):
         self.wb = openpyxl.Workbook()
         self.ws_days = self.wb.active
         self.ws_days.title = "365 Days"
@@ -26,14 +26,14 @@ class AtimeloggerAssistant:
         pass
 
     def work(self):
-        self._separate()
-        self._get_activity_type_info()
-        self._create_activitys()
+        self.__separate()
+        self.__get_activity_type_info()
+        self.__create_activitys()
         pass
 
 
     def summarizing(self):
-        self._create_sheet()
+        self.__create_sheet()
         table_header = list(self.no_group_types)
         table_header.insert(0, "")
         self.ws_days.append(table_header)
@@ -74,7 +74,7 @@ class AtimeloggerAssistant:
             file_name = file_name + ".xlsx"
         self.wb.save(file_name)
 
-    def _separate(self):
+    def __separate(self):
         """
         导出来的CSV文件中，通过与时间记录空一行的形式汇总了活动类别，保存着活动类别的层级关系。
         第一步就是要将这两个部分区分出来。
@@ -98,7 +98,7 @@ class AtimeloggerAssistant:
                 self.raw_types.append(row)
         pass
 
-    def _get_activity_type_info(self):
+    def __get_activity_type_info(self):
         """
         我的程序暂不支持重名活动类别
         主要是区分出活动组（Group）和活动
@@ -110,15 +110,17 @@ class AtimeloggerAssistant:
         self.group_types = set([raw_type[-4]
                                 for raw_type in self.raw_types if raw_type[-4]])
         # no_group_types = activity
-        self.no_group_types = self.all_types ^ self.group_types
+        self.no_group_types = self.all_types - self.group_types
 
         pass
 
-    def _create_activitys(self):
+    def __create_activitys(self):
         for activity_name in self.no_group_types:
             own_intervals = [
                 interval for interval in self.raw_intervals if interval[0] == activity_name]
             # ['形象', '00:32:35', '2019/5/5 21:59:33', '2019/5/5 22:32:08', '']
             self.activitys.append(Activity(activity_name, own_intervals))
-        self.activitys = sorted(self.activitys)
+        # 我并没有定义我创建的Activity，能不能进行排序，进行比较。
+        # python中比较同类对象的不同实例时，可以通过__lt__、__le__、__eq__等方法实现复杂比较
+        # self.activitys = sorted(self.activitys)
         pass
